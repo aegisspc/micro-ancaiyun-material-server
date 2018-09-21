@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ancaiyun.mapper.PurchaserMaterialMapper">
+    <resultMap id="BaseResultMap" type="com.ancaiyun.responseEntity.PurchaserMaterial">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+        <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+        <result column="product_name" jdbcType="VARCHAR" property="productName" />
+        <result column="specifications_model" jdbcType="VARCHAR" property="specificationsModel" />
+        <result column="parameter" jdbcType="VARCHAR" property="parameter" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
+        <result column="purchase_quantity" jdbcType="DECIMAL" property="purchaseQuantity" />
+        <result column="unit" jdbcType="VARCHAR" property="unit" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="filling_type" jdbcType="VARCHAR" property="fillingType" />
+        <result column="encoding" jdbcType="VARCHAR" property="encoding" />
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,create_time,del_flag,member_id,product_name,specifications_model,parameter,brand,purchase_quantity,unit,
+        description,filling_type,encoding
+    </sql>
+    <select id="selectAllBySelective" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from cj_ancaiyun_purchaser_material where del_flag = "0"
+        <if test="id!=null and id != ''">
+            and id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null">
+            and create_time>=#{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null">
+            and create_time &lt;=#{endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="memberId != null and memberId != ''">
+            and member_id = #{memberId,jdbcType=VARCHAR}
+        </if>
+        <if test="productName != null and productName != ''">
+            and product_name = #{productName,jdbcType=VARCHAR}
+        </if>
+        <if test="specificationsModel != null and specificationsModel != ''">
+            and specifications_model = #{specificationsModel,jdbcType=VARCHAR}
+        </if>
+        <if test="parameter != null and parameter!= ''">
+            and parameter = #{parameter,jdbcType=parameter}
+        </if>
+        <if test="brand != null and brand !=''">
+            and brand = #{brand,jdbcType=VARCHAR}
+        </if>
+        <if test="purchaseQuantity != null and purchaseQuantity != ''">
+            and purchase_quantity = #{purchaseQuantity,jdbcType=VARCHAR}
+        </if>
+        <if test="unit != null and unit != ''">
+            and unit = #{unit,jdbcType=VARCHAR}
+        </if>
+        <if test="description != null and description != ''">
+            and description = #{description,jdbcType=VARCHAR}
+        </if>
+        <if test="fillingType != null and fillingType != ''">
+            and filling_type = #{fillingType,jdbcType=VARCHAR}
+        </if>
+        <if test="encoding == 0">
+            and encoding is not NULL
+        </if>
+        <if test="encoding == 1">
+            and encoding is NULL
+        </if>
+        order by create_time desc
+    </select>
+    <update id="updateMaterialEncoding" parameterType="com.ancaiyun.responseEntity.PurchaserMaterial">
+        update cj_ancaiyun_purchaser_material set
+        encoding = #{encoding,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="delMaterial" parameterType="java.lang.String">
+        update cj_ancaiyun_purchaser_material SET del_flag = "1"
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>
